@@ -8,6 +8,7 @@ import DataSourcesPanel from './data-sources-panel';
 import NodeConfigurationPanel from './node-configuration-panel';
 import ConnectionsPanel from './connections-panel';
 import { useQueryClient } from '@tanstack/react-query';
+import LineageFlow from './lineage-flow';
 
 export default function OverviewConfig() {
   const queryClient = useQueryClient();
@@ -31,13 +32,23 @@ export default function OverviewConfig() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-3 gap-4 mb-4">
         <DataSourcesPanel
           selectedNodeId={selectedNodeId}
           setSelectedNodeId={setSelectedNodeId}
         />
 
+        <div className="flex justify-center items-center">
+          <img src="/matia-logo.svg" alt="matia-logo" className="w-1/2" />
+        </div>
+
         <NodeConfigurationPanel selectedNodeId={selectedNodeId} />
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div className="col-span-2">
+          <LineageFlow />
+        </div>
 
         <ConnectionsPanel />
       </div>

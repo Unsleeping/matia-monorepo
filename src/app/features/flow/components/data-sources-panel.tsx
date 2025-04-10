@@ -45,7 +45,7 @@ export default function DataSourcesPanel({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[460px] pr-4 overflow-y-auto">
+        <ScrollArea className="h-[360px] pr-4 overflow-y-auto">
           {isNodesLoading ? (
             <div className="space-y-4">
               {[...Array(5)].map((_, i) => (

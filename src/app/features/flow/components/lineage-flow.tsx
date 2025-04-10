@@ -42,7 +42,7 @@ const nodeTypes: NodeTypes = {
 
 export default function LineageFlow() {
   return (
-    <div className="w-full h-[calc(100vh-64px)]">
+    <div className="w-full h-[calc(100vh-64px)] border-2 border-blue-500 rounded-lg">
       <ReactFlowProvider>
         <FlowContent />
       </ReactFlowProvider>
@@ -273,7 +273,7 @@ function FlowContent() {
       fitView
       minZoom={0.5}
       maxZoom={1.5}
-      defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+      defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
       edgeUpdaterRadius={10}
       edgesUpdatable={true}
       edgesFocusable={true}

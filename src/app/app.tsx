@@ -3,9 +3,11 @@ import { RootPage } from './pages/root-page';
 
 export function App() {
   return (
-    <Routes>
-      <Route path="/" element={<RootPage />} />
-    </Routes>
+    <main>
+      <Routes>
+        <Route path="/" element={<RootPage />} />
+      </Routes>
+    </main>
   );
 }
 
