@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import * as ReactDOM from 'react-dom/client';
 import App from './app/app';
+import { TanstackQueryProvider } from './app/providers/tanstack-query-provider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <TanstackQueryProvider>
+        <App />
+      </TanstackQueryProvider>
     </BrowserRouter>
   </StrictMode>
 );
