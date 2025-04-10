@@ -1,5 +1,3 @@
-'use client';
-
 import { Trash2 } from 'lucide-react';
 import { useNodes, useEdges, useDeleteEdge } from '../lib/api';
 import { useFlowStore } from '../lib/store';
@@ -15,7 +13,7 @@ import { Button } from 'src/app/ui/button';
 import { ScrollArea } from 'src/app/ui/scroll-area';
 import { Skeleton } from 'src/app/ui/skeleton';
 
-export default function ConnectionsPanel() {
+export function ConnectionsPanel() {
   const { data: nodes, isLoading: isNodesLoading } = useNodes();
   const { data: edges, isLoading: isEdgesLoading } = useEdges();
   const isLoading = isNodesLoading || isEdgesLoading;

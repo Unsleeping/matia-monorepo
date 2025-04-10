@@ -1,4 +1,4 @@
-import OverviewConfig from '../features/flow/components/overview-config';
+import { OverviewConfig } from '../features/flow/components/overview-config';
 
 export function RootPage() {
   return (

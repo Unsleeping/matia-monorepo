@@ -1,5 +1,3 @@
-'use client';
-
 import { useNodes, useUpdateNode } from '../lib/api';
 import { DataColumn, useFlowStore } from '../lib/store';
 
@@ -19,12 +17,14 @@ import {
 } from 'src/app/ui/select';
 import { Label } from 'src/app/ui/label';
 import { Checkbox } from 'src/app/ui/checkbox';
+import { NodeStatus } from './node-status';
+import { NodeIcon } from './node-icon';
 
 interface NodeConfigurationPanelProps {
   selectedNodeId: string | null;
 }
 
-export default function NodeConfigurationPanel({
+export function NodeConfigurationPanel({
   selectedNodeId,
 }: NodeConfigurationPanelProps) {
   const { data: nodes } = useNodes();
@@ -62,10 +62,18 @@ export default function NodeConfigurationPanel({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Node Configuration</CardTitle>
+        <CardTitle>
+          {selectedNode && (
+            <div className="flex items-center gap-2">
+              <NodeIcon source={selectedNode.data.source} />
+              <span>{selectedNode.data.label}</span>
+            </div>
+          )}
+          {!selectedNode && 'Node Configuration'}
+        </CardTitle>
         <CardDescription>
           {selectedNode
-            ? `Configure ${selectedNode.data.label}`
+            ? `Configure node properties and visible columns`
             : 'Select a node to configure'}
         </CardDescription>
       </CardHeader>
@@ -92,6 +100,7 @@ export default function NodeConfigurationPanel({
                   <SelectItem value="warning">Warning</SelectItem>
                 </SelectContent>
               </Select>
+              <NodeStatus status={selectedNode.data.status} />
             </div>
 
             <div>

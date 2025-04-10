@@ -1,16 +1,14 @@
-'use client';
-
 import { RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { useFlowStore } from '../lib/store';
 import { Button } from 'src/app/ui/button';
-import DataSourcesPanel from './data-sources-panel';
-import NodeConfigurationPanel from './node-configuration-panel';
-import ConnectionsPanel from './connections-panel';
+import { DataSourcesPanel } from './data-sources-panel';
+import { NodeConfigurationPanel } from './node-configuration-panel';
+import { ConnectionsPanel } from './connections-panel';
 import { useQueryClient } from '@tanstack/react-query';
-import LineageFlow from './lineage-flow';
+import { LineageFlow } from './lineage-flow';
 
-export default function OverviewConfig() {
+export function OverviewConfig() {
   const queryClient = useQueryClient();
   const { resetToDefault } = useFlowStore();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);

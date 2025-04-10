@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useRef } from 'react';
 import ReactFlow, {
   Background,
@@ -40,7 +38,7 @@ const nodeTypes: NodeTypes = {
   dataSource: DataSourceNode,
 };
 
-export default function LineageFlow() {
+export function LineageFlow() {
   return (
     <div className="w-full h-[calc(100vh-64px)] border-2 border-blue-500 rounded-lg">
       <ReactFlowProvider>
