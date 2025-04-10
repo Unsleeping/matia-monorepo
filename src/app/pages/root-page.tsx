@@ -8,7 +8,8 @@ export function RootPage() {
 
   return (
     <main className="flex min-h-screen flex-col">
-      <div className="flex border-b">
+      <div className="flex border-b items-center px-4">
+        <img src="/matia-logo.svg" alt="Matia" className="w-[128px] h-6" />
         <div className="container mx-auto px-4 py-4">
           <Tabs defaultValue="overview" onValueChange={setActiveTab}>
             <TabsList>
