@@ -27,7 +27,7 @@ interface NodeConfigurationPanelProps {
 export default function NodeConfigurationPanel({
   selectedNodeId,
 }: NodeConfigurationPanelProps) {
-  const { data: nodes, isLoading } = useNodes();
+  const { data: nodes } = useNodes();
   const { mutate: updateNode } = useUpdateNode();
   const { selectedColumns, toggleColumnSelection, updateNodeStatus } =
     useFlowStore();

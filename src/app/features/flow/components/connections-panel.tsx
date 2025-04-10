@@ -16,8 +16,9 @@ import { ScrollArea } from 'src/app/ui/scroll-area';
 import { Skeleton } from 'src/app/ui/skeleton';
 
 export default function ConnectionsPanel() {
-  const { data: nodes } = useNodes();
+  const { data: nodes, isLoading: isNodesLoading } = useNodes();
   const { data: edges, isLoading: isEdgesLoading } = useEdges();
+  const isLoading = isNodesLoading || isEdgesLoading;
   const { mutate: deleteEdge } = useDeleteEdge();
   const { removeEdge } = useFlowStore();
 
@@ -36,7 +37,7 @@ export default function ConnectionsPanel() {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[500px] pr-4">
-          {isEdgesLoading ? (
+          {isLoading ? (
             <div className="space-y-4">
               {[...Array(4)].map((_, i) => (
                 <Skeleton key={i} className="p-3 border rounded-md h-[70px]" />
