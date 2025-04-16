@@ -29,7 +29,6 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "6.29.0",
-    "reactflow": "^11.11.4",
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.5",

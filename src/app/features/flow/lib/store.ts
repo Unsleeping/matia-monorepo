@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-import type { Node, Edge } from 'reactflow';
 import { mockConfig } from './mock-data';
+import { Edge, Node } from '@xyflow/react';
 
 export type DataColumn = {
   name: string;
