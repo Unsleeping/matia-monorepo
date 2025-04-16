@@ -6,7 +6,8 @@ import { DataSourcesPanel } from './data-sources-panel';
 import { NodeConfigurationPanel } from './node-configuration-panel';
 import { ConnectionsPanel } from './connections-panel';
 import { useQueryClient } from '@tanstack/react-query';
-import { LineageFlow } from './lineage-flow';
+import { LineageFlowLayout } from './lineage-flow-layout';
+import { Link } from 'react-router-dom';
 
 export function OverviewConfig() {
   const queryClient = useQueryClient();
@@ -36,8 +37,11 @@ export function OverviewConfig() {
           setSelectedNodeId={setSelectedNodeId}
         />
 
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center flex-col">
           <img src="/matia-logo.svg" alt="matia-logo" className="w-1/2" />
+          <Link to="/infra" className="text-blue-500 mt-4 underline">
+            Infra
+          </Link>
         </div>
 
         <NodeConfigurationPanel selectedNodeId={selectedNodeId} />
@@ -45,7 +49,7 @@ export function OverviewConfig() {
 
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
-          <LineageFlow />
+          <LineageFlowLayout />
         </div>
 
         <ConnectionsPanel />

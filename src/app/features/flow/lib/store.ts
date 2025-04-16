@@ -9,21 +9,21 @@ export type DataColumn = {
   selected?: boolean;
 };
 
-export type DataNode = Node & {
-  data: {
-    label: string;
-    source: string;
-    status: 'ok' | 'error' | 'warning';
-    columns: DataColumn[];
-    alert?: {
-      title: string;
-      message: string;
-    };
-    isExpanded?: boolean;
-    onToggleExpand?: (id: string) => void;
-    selectedColumns?: string[];
+export type DataNodeData = {
+  label: string;
+  source: string;
+  status: 'ok' | 'error' | 'warning';
+  columns: DataColumn[];
+  alert?: {
+    title: string;
+    message: string;
   };
+  isExpanded?: boolean;
+  onToggleExpand?: (id: string) => void;
+  selectedColumns?: string[];
 };
+
+export type DataNode = Node<DataNodeData, 'dataSource'>;
 
 export type DataEdge = Edge & {
   // Add any custom edge properties here

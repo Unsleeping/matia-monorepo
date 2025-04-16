@@ -6,7 +6,7 @@ export const mockConfig = {
       data: {
         label: 'APAC_SALES',
         source: 'snowflake',
-        status: 'error',
+        status: 'error' as const,
         columns: [
           { name: 'product_id', type: 'string' },
           { name: 'sale_date', type: 'date' },
@@ -22,7 +22,7 @@ export const mockConfig = {
       data: {
         label: 'REVENUE_2024',
         source: 'snowflake',
-        status: 'ok',
+        status: 'ok' as const,
         columns: [
           { name: 'quarter', type: 'string' },
           { name: 'total_revenue', type: 'number' },
@@ -37,7 +37,7 @@ export const mockConfig = {
       data: {
         label: 'ORDERS_2023',
         source: 'postgres',
-        status: 'ok',
+        status: 'ok' as const,
         columns: [
           { name: 'aisle', type: 'string' },
           { name: 'day_of_week', type: 'string' },
@@ -52,7 +52,7 @@ export const mockConfig = {
       data: {
         label: 'APAC_PROFITS',
         source: 'postgres',
-        status: 'warning',
+        status: 'warning' as const,
         alert: {
           title: 'Monte Carlo alert',
           message: 'Data quality test failed',
@@ -71,7 +71,7 @@ export const mockConfig = {
       data: {
         label: 'FINANCIAL_HEALTH',
         source: 'postgres',
-        status: 'error',
+        status: 'error' as const,
         columns: [
           { name: 'metric_name', type: 'string' },
           { name: 'metric_value', type: 'number' },
@@ -86,7 +86,7 @@ export const mockConfig = {
       data: {
         label: 'REGIONAL_PROFITS',
         source: 'postgres',
-        status: 'error',
+        status: 'error' as const,
         columns: [
           { name: 'region', type: 'string' },
           { name: 'year', type: 'number' },

@@ -6,18 +6,16 @@ import type {
 } from './store';
 import { mockConfig } from './mock-data';
 
-// Simulate API calls with mock data
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// API functions
 async function fetchNodes(): Promise<DataNode[]> {
-  await delay(500); // Simulate network delay
-  return mockConfig.nodes as DataNode[];
+  await delay(500);
+  return mockConfig.nodes;
 }
 
 async function fetchEdges(): Promise<DataEdge[]> {
   await delay(300);
-  return mockConfig.edges as DataEdge[];
+  return mockConfig.edges;
 }
 
 async function updateNode(node: DataNode): Promise<DataNode> {
@@ -54,6 +52,15 @@ export function useNodes() {
     queryKey: ['nodes'],
     queryFn: fetchNodes,
     staleTime: 1000 * 60 * 5, // 5 minutes
+    select: (data) =>
+      data.map((node) => ({
+        id: node.id,
+        position: node.position,
+        type: 'dataSource' as const,
+        data: {
+          ...node.data,
+        },
+      })),
   });
 }
 
