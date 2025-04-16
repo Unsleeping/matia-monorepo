@@ -15,7 +15,6 @@ import { CustomNodeChild } from '../nodes/custom-node-child';
 import { CustomNodeParent } from '../nodes/custom-node-parent';
 import { SinEdge } from '../edges/sin-edge';
 
-import '@xyflow/react/dist/style.css';
 import { CustomEdge } from '../edges/custom-edge';
 
 const nodeTypes = {
