@@ -3,7 +3,6 @@ import {
   BackgroundVariant,
   Controls,
   NodeTypes,
-  ReactFlowProvider,
 } from '@xyflow/react';
 
 import { EdgeTypes } from '@xyflow/react';
@@ -43,17 +42,15 @@ export function Flow() {
   }
 
   return (
-    <ReactFlowProvider>
-      <ReactFlow
-        defaultNodes={nodes}
-        defaultEdges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        fitView
-      >
-        <Controls position="top-left" />
-        <Background variant={BackgroundVariant.Dots} />
-      </ReactFlow>
-    </ReactFlowProvider>
+    <ReactFlow
+      defaultNodes={nodes}
+      defaultEdges={edges}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      fitView
+    >
+      <Controls position="top-left" />
+      <Background variant={BackgroundVariant.Dots} />
+    </ReactFlow>
   );
 }
