@@ -53,8 +53,8 @@ export type FlowState = {
 };
 
 export const useFlowStore = create<FlowState>()((set, get) => ({
-  nodes: mockConfig.nodes as DataNode[],
-  edges: mockConfig.edges as DataEdge[],
+  nodes: [] as DataNode[],
+  edges: [] as DataEdge[],
   expandedNodes: {},
   selectedColumns: {},
 

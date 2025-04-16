@@ -276,7 +276,6 @@ export function FlowContent() {
       <Controls />
       <MiniMap />
 
-      {/* Edge context menu */}
       <Panel position="top-right">
         <div className="bg-white p-2 rounded shadow-sm text-xs">
           <p>Tip: Select an edge and press Delete to remove it</p>

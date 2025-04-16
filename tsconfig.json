@@ -3,7 +3,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler", //https://github.com/TanStack/router/issues/1848#issuecomment-2198051122
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,

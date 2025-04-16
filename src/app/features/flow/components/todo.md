@@ -8,5 +8,7 @@
 - auth layer with frontegg
 - change connection type
 - refactor lineage-flow
-- move to tanstack router / rr7
 - move controlled to uncontrolled state on lineage
+- minimap customization/
+- show columns functionality
+- zustand connect to flow

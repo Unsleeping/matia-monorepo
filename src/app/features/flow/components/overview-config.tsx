@@ -7,7 +7,7 @@ import { NodeConfigurationPanel } from './node-configuration-panel';
 import { ConnectionsPanel } from './connections-panel';
 import { useQueryClient } from '@tanstack/react-query';
 import { LineageFlowLayout } from './lineage-flow-layout';
-import { Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-router';
 
 export function OverviewConfig() {
   const queryClient = useQueryClient();
@@ -39,7 +39,7 @@ export function OverviewConfig() {
 
         <div className="flex justify-center items-center flex-col">
           <img src="/matia-logo.svg" alt="matia-logo" className="w-1/2" />
-          <Link to="/infra" className="text-blue-500 mt-4 underline">
+          <Link to="/playground" className="text-blue-500 mt-4 underline">
             Infra
           </Link>
         </div>
