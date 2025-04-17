@@ -8,13 +8,15 @@ import { mockConfig } from './mock-data';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function fetchNodes(): Promise<DataNode[]> {
-  await delay(500);
+export async function fetchNodes(): Promise<DataNode[]> {
+  console.log('fetchNodes');
+  await delay(1500);
   return mockConfig.nodes;
 }
 
-async function fetchEdges(): Promise<DataEdge[]> {
-  await delay(300);
+export async function fetchEdges(): Promise<DataEdge[]> {
+  console.log('fetchEdges');
+  await delay(2300);
   return mockConfig.edges;
 }
 

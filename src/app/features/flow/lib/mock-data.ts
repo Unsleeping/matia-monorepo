@@ -3,6 +3,7 @@ export const mockConfig = {
     {
       id: 'apac_sales',
       position: { x: 100, y: 100 },
+      type: 'dataSource' as const,
       data: {
         label: 'APAC_SALES',
         source: 'snowflake',
@@ -19,6 +20,7 @@ export const mockConfig = {
     {
       id: 'revenue_2024',
       position: { x: 100, y: 300 },
+      type: 'dataSource' as const,
       data: {
         label: 'REVENUE_2024',
         source: 'snowflake',
@@ -34,6 +36,7 @@ export const mockConfig = {
     {
       id: 'orders_2023',
       position: { x: 400, y: 200 },
+      type: 'dataSource' as const,
       data: {
         label: 'ORDERS_2023',
         source: 'postgres',
@@ -49,6 +52,7 @@ export const mockConfig = {
     {
       id: 'apac_profits',
       position: { x: 700, y: 100 },
+      type: 'dataSource' as const,
       data: {
         label: 'APAC_PROFITS',
         source: 'postgres',
@@ -68,6 +72,7 @@ export const mockConfig = {
     {
       id: 'financial_health',
       position: { x: 700, y: 300 },
+      type: 'dataSource' as const,
       data: {
         label: 'FINANCIAL_HEALTH',
         source: 'postgres',
@@ -83,6 +88,7 @@ export const mockConfig = {
     {
       id: 'regional_profits',
       position: { x: 700, y: 500 },
+      type: 'dataSource' as const,
       data: {
         label: 'REGIONAL_PROFITS',
         source: 'postgres',
@@ -102,30 +108,35 @@ export const mockConfig = {
       source: 'apac_sales',
       target: 'orders_2023',
       animated: true,
+      type: 'custom',
     },
     {
       id: 'e2-3',
       source: 'revenue_2024',
       target: 'orders_2023',
       animated: false,
+      type: 'custom',
     },
     {
       id: 'e3-4',
       source: 'orders_2023',
       target: 'apac_profits',
       animated: true,
+      type: 'custom',
     },
     {
       id: 'e3-5',
       source: 'orders_2023',
       target: 'financial_health',
       animated: false,
+      type: 'custom',
     },
     {
       id: 'e3-6',
       source: 'orders_2023',
       target: 'regional_profits',
       animated: true,
+      type: 'custom',
     },
   ],
 };

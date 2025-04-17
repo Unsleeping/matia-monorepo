@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { mockConfig } from './mock-data';
 import { Edge, Node } from '@xyflow/react';
+import { fetchNodes, fetchEdges } from './api';
 
 export type DataColumn = {
   name: string;
@@ -34,7 +35,7 @@ export type FlowState = {
   edges: DataEdge[];
   expandedNodes: Record<string, boolean>;
   selectedColumns: Record<string, string[]>;
-
+  isLoading: boolean;
   // Actions
   setNodes: (nodes: DataNode[]) => void;
   setEdges: (edges: DataEdge[]) => void;
@@ -50,6 +51,8 @@ export type FlowState = {
   addEdge: (edge: DataEdge) => void;
   removeEdge: (edgeId: string) => void;
   resetToDefault: () => void;
+
+  fetchFlowData: () => Promise<void>;
 };
 
 export const useFlowStore = create<FlowState>()((set, get) => ({
@@ -57,6 +60,7 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
   edges: [] as DataEdge[],
   expandedNodes: {},
   selectedColumns: {},
+  isLoading: false,
 
   setNodes: (nodes) => {
     // Preserve positions from existing nodes
@@ -141,9 +145,21 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
 
   resetToDefault: () =>
     set({
-      nodes: mockConfig.nodes as DataNode[],
-      edges: mockConfig.edges as DataEdge[],
+      nodes: mockConfig.nodes,
+      edges: mockConfig.edges,
       expandedNodes: {},
       selectedColumns: {},
     }),
+
+  fetchFlowData: async () => {
+    try {
+      set({ isLoading: true });
+      const [nodes, edges] = await Promise.all([fetchNodes(), fetchEdges()]);
+      set({ nodes, edges });
+    } catch (error) {
+      console.error('Error fetching flow data:', error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));

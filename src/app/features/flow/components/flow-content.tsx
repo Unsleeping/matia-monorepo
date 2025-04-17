@@ -16,14 +16,10 @@ import {
   NodeTypes,
   // OnNodesChange,
 } from '@xyflow/react';
-import {
-  // useDeleteEdge,
-  useEdges,
-  useNodes,
-} from '../lib/api';
+
 // import { useFlowStore } from '../lib/store';
 import { DataSourceNode } from '../nodes/data-source-node';
-
+import { useFlowStore } from '../lib/store';
 // import { DataSourceNodeType } from '../nodes/data-source-node';
 const nodeTypes = {
   dataSource: DataSourceNode,
@@ -33,8 +29,11 @@ const nodeTypes = {
 // type CustomEdge = Edge;
 
 export function FlowContent() {
-  const { data: nodes, isLoading: isNodesLoading } = useNodes();
-  const { data: edgesData, isLoading: isEdgesLoading } = useEdges();
+  const isLoading = useFlowStore((state) => state.isLoading);
+  const nodes = useFlowStore((state) => state.nodes);
+  const edges = useFlowStore((state) => state.edges);
+  // const { data: nodes, isLoading: isNodesLoading } = useNodes();
+  // const { data: edgesData, isLoading: isEdgesLoading } = useEdges();
   // const { mutate: deleteEdge } = useDeleteEdge();
 
   // const {
@@ -242,16 +241,11 @@ export function FlowContent() {
   //   };
   // }, [edges, deleteEdge, removeEdge]);
 
-  if (isNodesLoading || isEdgesLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">Loading...</div>
     );
   }
-
-  const edges = edgesData?.map((edge) => ({
-    ...edge,
-    type: 'custom',
-  }));
 
   return (
     <ReactFlow
