@@ -5,10 +5,6 @@
 - docker?
 - e2e playwright delete (node + edge) / customize some columns to reflect over the graph/config
 - immer in zustand
-- auth layer with frontegg
-- change connection type
-- refactor lineage-flow
-- move controlled to uncontrolled state on lineage
-- minimap customization/
+- minimap customization?
 - show columns functionality
 - zustand connect to flow

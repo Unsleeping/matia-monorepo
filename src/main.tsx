@@ -5,6 +5,7 @@ import * as ReactDOM from 'react-dom/client';
 import { routeTree } from './routeTree.gen';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { TanstackQueryProvider } from './app/providers/tanstack-query-provider';
+import { AuthProvider } from './app/providers/auth-provider';
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -22,8 +23,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <TanstackQueryProvider>
-      <RouterProvider router={router} />
-    </TanstackQueryProvider>
+    <AuthProvider>
+      <TanstackQueryProvider>
+        <RouterProvider router={router} />
+      </TanstackQueryProvider>
+    </AuthProvider>
   </StrictMode>
 );
