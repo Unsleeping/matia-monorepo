@@ -1,5 +1,4 @@
-import { useNodes, useDeleteNode } from '../lib/api';
-import { useFlowStore } from '../lib/store';
+import { useFlowStore, FlowState } from '../lib/store';
 
 import {
   Card,
@@ -11,22 +10,26 @@ import {
 import { ScrollArea } from 'src/app/ui/scroll-area';
 import { Skeleton } from 'src/app/ui/skeleton';
 import { NodeConfigItem } from './node-config-item';
-
+import { useShallow } from 'zustand/react/shallow';
 interface DataSourcesPanelProps {
   selectedNodeId: string | null;
   setSelectedNodeId: (nodeId: string | null) => void;
 }
 
+const selector = (state: FlowState) => ({
+  nodes: state.nodes,
+  isLoading: state.isLoading,
+});
+
 export function DataSourcesPanel({
   selectedNodeId,
   setSelectedNodeId,
 }: DataSourcesPanelProps) {
-  const { data: nodes, isLoading: isNodesLoading } = useNodes();
-  const { mutate: deleteNode } = useDeleteNode();
+  const { nodes, isLoading } = useFlowStore(useShallow(selector));
+
   const { selectedColumns, removeNode } = useFlowStore();
 
   const handleDeleteNode = (nodeId: string) => {
-    deleteNode(nodeId);
     removeNode(nodeId);
 
     if (selectedNodeId === nodeId) {
@@ -44,7 +47,7 @@ export function DataSourcesPanel({
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[360px] pr-4 overflow-y-auto">
-          {isNodesLoading ? (
+          {isLoading ? (
             <div className="space-y-4">
               {[...Array(5)].map((_, i) => (
                 <Skeleton key={i} className="p-3 border rounded-md h-[86px]" />

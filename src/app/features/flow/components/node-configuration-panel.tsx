@@ -1,5 +1,4 @@
-import { useNodes, useUpdateNode } from '../lib/api';
-import { DataColumn, useFlowStore } from '../lib/store';
+import { DataColumn, FlowState, useFlowStore } from '../lib/store';
 
 import {
   Card,
@@ -19,44 +18,42 @@ import { Label } from 'src/app/ui/label';
 import { Checkbox } from 'src/app/ui/checkbox';
 import { NodeStatus } from './node-status';
 import { NodeIcon } from './node-icon';
+import { useShallow } from 'zustand/react/shallow';
 
 interface NodeConfigurationPanelProps {
   selectedNodeId: string | null;
 }
 
+const selector = (state: FlowState) => ({
+  nodes: state.nodes,
+  selectedColumns: state.selectedColumns,
+  toggleColumnSelection: state.toggleColumnSelection,
+  updateNodeStatus: state.updateNodeStatus,
+});
+
 export function NodeConfigurationPanel({
   selectedNodeId,
 }: NodeConfigurationPanelProps) {
-  const { data: nodes } = useNodes();
-  const { mutate: updateNode } = useUpdateNode();
-  const { selectedColumns, toggleColumnSelection, updateNodeStatus } =
-    useFlowStore();
+  const {
+    nodes,
+    selectedColumns: allSelectedColumns,
+    toggleColumnSelection,
+    updateNodeStatus,
+  } = useFlowStore(useShallow(selector));
 
   const selectedNode =
     nodes?.find((node) => node.id === selectedNodeId) || null;
+
+  let selectedColumns: string[] = [];
+  if (selectedNodeId) {
+    selectedColumns = allSelectedColumns.get(selectedNodeId) || [];
+  }
 
   const handleStatusChange = (
     nodeId: string,
     status: 'ok' | 'error' | 'warning'
   ) => {
     updateNodeStatus(nodeId, status);
-
-    // Also update via React Query
-    const node = nodes?.find((n) => n.id === nodeId);
-    if (node) {
-      updateNode({
-        ...node,
-        data: {
-          ...node.data,
-          status,
-        },
-      });
-    }
-  };
-
-  // Fixed column toggle function to preserve other selections
-  const handleColumnToggle = (nodeId: string, columnName: string) => {
-    toggleColumnSelection(nodeId, columnName);
   };
 
   return (
@@ -113,14 +110,12 @@ export function NodeConfigurationPanel({
                   >
                     <Checkbox
                       id={`column-${column.name}`}
-                      checked={
-                        !selectedColumns[selectedNode.id] ||
-                        selectedColumns[selectedNode.id].length === 0 ||
-                        selectedColumns[selectedNode.id].includes(column.name)
-                      }
-                      onCheckedChange={() =>
-                        handleColumnToggle(selectedNode.id, column.name)
-                      }
+                      checked={selectedColumns.includes(column.name)}
+                      onCheckedChange={() => {
+                        if (selectedNodeId) {
+                          toggleColumnSelection(selectedNodeId, column.name);
+                        }
+                      }}
                     />
                     <Label
                       htmlFor={`column-${column.name}`}
@@ -135,11 +130,8 @@ export function NodeConfigurationPanel({
                 ))}
               </div>
               <div className="mt-4 text-xs text-gray-500">
-                {selectedColumns[selectedNode.id]?.length
-                  ? `${
-                      selectedColumns[selectedNode.id].length
-                    } columns selected`
-                  : 'All columns visible'}
+                {selectedColumns.length > 0 &&
+                  `${selectedColumns.length} columns selected`}
               </div>
             </div>
           </div>

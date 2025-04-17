@@ -36,10 +36,12 @@ export type DataNode = Node<DataNodeData, 'dataSource'>;
 export type DataEdge = Edge;
 
 export type FlowState = {
+  // custom state to control UI inside custom flow nodes
   expandedNodes: Set<string>;
   selectedColumns: Map<string, string[]>;
   isLoading: boolean;
 
+  // custom actions to control UI inside custom flow nodes
   toggleNodeExpansion: (nodeId: string) => void;
   updateNodeStatus: (
     nodeId: string,
@@ -49,12 +51,18 @@ export type FlowState = {
   toggleColumnSelection: (nodeId: string, columnName: string) => void;
   resetToDefault: () => void;
 
+  // custom actions to update flow state outside of react-flow
+  removeEdge: (edgeId: string) => void;
+  removeNode: (nodeId: string) => void;
+
+  // custom actions to load flow data from external source
   fetchFlowData: () => Promise<void>;
 
-  // TODO: refactor to divide from react-flow and custom actions
+  // react flow controlled state
   nodes: DataNode[];
   edges: DataEdge[];
 
+  // react flow controlled actions
   onNodesChange: (changes: NodeChange<DataNode>[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;
   onConnect: (connection: Connection) => void;
@@ -67,6 +75,7 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
   selectedColumns: new Map<string, string[]>(),
   isLoading: false,
 
+  // custom actions to control UI inside custom flow nodes
   toggleNodeExpansion: (nodeId) => {
     const expandedNodes = new Set(get().expandedNodes);
     const currentExpanded = expandedNodes.has(nodeId);
@@ -77,8 +86,8 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
       expandedNodes.add(nodeId);
     }
 
-    set((state) => ({
-      expandedNodes: expandedNodes,
+    set(() => ({
+      expandedNodes,
     }));
   },
 
@@ -98,13 +107,14 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
 
   toggleColumnSelection: (nodeId, columnName) =>
     set((state) => {
-      const currentSelected = state.selectedColumns.get(nodeId) || [];
+      const map = new Map(state.selectedColumns);
+      const currentSelected = map.get(nodeId) || [];
       const newSelected = currentSelected.includes(columnName)
         ? currentSelected.filter((name) => name !== columnName)
         : [...currentSelected, columnName];
 
       return {
-        selectedColumns: state.selectedColumns.set(nodeId, newSelected),
+        selectedColumns: map.set(nodeId, newSelected),
       };
     }),
 
@@ -116,6 +126,7 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
       selectedColumns: new Map<string, string[]>(),
     }),
 
+  // load flow data from external source
   fetchFlowData: async () => {
     try {
       set({ isLoading: true });
@@ -128,6 +139,7 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
     }
   },
 
+  // react flow controlled actions
   onNodesChange: (changes: NodeChange<DataNode>[]) => {
     console.log('onNodesChange', changes);
     set({
@@ -145,5 +157,17 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
     set({
       edges: addEdge(connection, get().edges),
     });
+  },
+
+  // custom actions to update flow state outside of react-flow
+  removeEdge: (edgeId: string) => {
+    set((state) => ({
+      edges: state.edges.filter((edge) => edge.id !== edgeId),
+    }));
+  },
+  removeNode: (nodeId: string) => {
+    set((state) => ({
+      nodes: state.nodes.filter((node) => node.id !== nodeId),
+    }));
   },
 }));

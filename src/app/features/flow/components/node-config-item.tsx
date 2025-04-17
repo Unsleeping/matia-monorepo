@@ -7,7 +7,7 @@ import { DataNode } from '../lib/store';
 interface NodeConfigItemProps {
   node: DataNode;
   selectedNodeId: string | null;
-  selectedColumns: Record<string, string[]>;
+  selectedColumns: Map<string, string[]>;
   onSelect: (nodeId: string) => void;
   onDelete: (nodeId: string) => void;
 }
@@ -19,6 +19,7 @@ export function NodeConfigItem({
   onSelect,
   onDelete,
 }: NodeConfigItemProps) {
+  const columns = selectedColumns.get(node.id) || [];
   return (
     <div
       className={`p-3 border rounded-md cursor-pointer transition-colors ${
@@ -51,10 +52,7 @@ export function NodeConfigItem({
       </div>
 
       <div className="mt-2 text-xs text-gray-500">
-        {node.data.columns.length} columns •{' '}
-        {selectedColumns[node.id]?.length
-          ? `${selectedColumns[node.id].length} selected`
-          : 'All visible'}
+        {node.data.columns.length} columns • {columns.length} selected
       </div>
     </div>
   );

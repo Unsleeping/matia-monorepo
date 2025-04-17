@@ -1,6 +1,6 @@
 import { Trash2 } from 'lucide-react';
-import { useNodes, useEdges, useDeleteEdge } from '../lib/api';
-import { useFlowStore } from '../lib/store';
+
+import { FlowState, useFlowStore } from '../lib/store';
 
 import {
   Card,
@@ -12,16 +12,21 @@ import {
 import { Button } from 'src/app/ui/button';
 import { ScrollArea } from 'src/app/ui/scroll-area';
 import { Skeleton } from 'src/app/ui/skeleton';
+import { useShallow } from 'zustand/react/shallow';
+
+const selector = (state: FlowState) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  isLoading: state.isLoading,
+  removeEdge: state.removeEdge,
+});
 
 export function ConnectionsPanel() {
-  const { data: nodes, isLoading: isNodesLoading } = useNodes();
-  const { data: edges, isLoading: isEdgesLoading } = useEdges();
-  const isLoading = isNodesLoading || isEdgesLoading;
-  const { mutate: deleteEdge } = useDeleteEdge();
-  const { removeEdge } = useFlowStore();
+  const { nodes, edges, isLoading, removeEdge } = useFlowStore(
+    useShallow(selector)
+  );
 
   const handleDeleteEdge = (edgeId: string) => {
-    deleteEdge(edgeId);
     removeEdge(edgeId);
   };
 

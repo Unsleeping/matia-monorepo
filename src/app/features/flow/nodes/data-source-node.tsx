@@ -24,22 +24,22 @@ export type DataSourceNodeType = Node<DataNodeData, 'dataSource'>;
 const selector = (state: FlowState) => ({
   expandedNodes: state.expandedNodes,
   toggleNodeExpansion: state.toggleNodeExpansion,
+  selectedColumns: state.selectedColumns,
 });
 
 export function DataSourceNode({
   data: { label, source, status, columns, alert },
   id,
 }: NodeProps<DataSourceNodeType>) {
-  const { toggleNodeExpansion, expandedNodes } = useFlowStore(
+  const { toggleNodeExpansion, expandedNodes, selectedColumns } = useFlowStore(
     useShallow(selector)
   );
   const isExpanded = expandedNodes.has(id);
+  const columnsToDisplay = selectedColumns.get(id) || [];
 
-  const displayColumns = columns;
-  // .filter(
-  //   (col: DataColumn) =>
-  //     selectedColumns.length === 0 || selectedColumns.includes(col.name)
-  // );
+  const displayColumns = columns.filter((col: DataColumn) =>
+    columnsToDisplay.includes(col.name)
+  );
 
   return (
     <div
@@ -117,19 +117,11 @@ export function DataSourceNode({
                 <span className="text-gray-700">{column.name}</span>
               </div>
             ))}
-
-            {displayColumns.length > 3 && (
-              <button className="w-full text-center text-xs text-blue-600 mt-2">
-                Show more columns
-              </button>
-            )}
-
-            {/* {selectedColumns.length > 0 && (
-              <div className="text-xs text-gray-500 mt-2">
-                Showing {selectedColumns.length} selected columns
-              </div>
-            )} */}
           </div>
+        )}
+
+        {isExpanded && displayColumns && displayColumns.length === 0 && (
+          <div className="mt-3 text-gray-500 text-sm">No columns selected</div>
         )}
       </div>
     </div>
