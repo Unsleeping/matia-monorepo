@@ -1,7 +1,16 @@
 import { create } from 'zustand';
 
 import { mockConfig } from './mock-data';
-import { Edge, Node } from '@xyflow/react';
+import {
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+  Edge,
+  EdgeChange,
+  Node,
+  NodeChange,
+  Connection,
+} from '@xyflow/react';
 import { fetchNodes, fetchEdges } from './api';
 
 export type DataColumn = {
@@ -36,6 +45,7 @@ export type FlowState = {
   expandedNodes: Record<string, boolean>;
   selectedColumns: Record<string, string[]>;
   isLoading: boolean;
+
   // Actions
   setNodes: (nodes: DataNode[]) => void;
   setEdges: (edges: DataEdge[]) => void;
@@ -51,6 +61,11 @@ export type FlowState = {
   addEdge: (edge: DataEdge) => void;
   removeEdge: (edgeId: string) => void;
   resetToDefault: () => void;
+
+  // TODO: refactor to divide from react-flow and custom actions
+  onNodesChange: (changes: NodeChange<DataNode>[]) => void;
+  onEdgesChange: (changes: EdgeChange[]) => void;
+  onConnect: (connection: Connection) => void;
 
   fetchFlowData: () => Promise<void>;
 };
@@ -161,5 +176,24 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  onNodesChange: (changes: NodeChange<DataNode>[]) => {
+    console.log('onNodesChange', changes);
+    set({
+      nodes: applyNodeChanges<DataNode>(changes, get().nodes),
+    });
+  },
+  onEdgesChange: (changes: EdgeChange[]) => {
+    console.log('onEdgesChange', changes);
+    set({
+      edges: applyEdgeChanges(changes, get().edges),
+    });
+  },
+  onConnect: (connection: Connection) => {
+    console.log('onConnect', connection);
+    set({
+      edges: addEdge(connection, get().edges),
+    });
   },
 }));
