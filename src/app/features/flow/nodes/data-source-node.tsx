@@ -1,11 +1,4 @@
-import {
-  AlertTriangle,
-  ChevronUp,
-  ChevronDown,
-  Type,
-  Calendar,
-  Hash,
-} from 'lucide-react';
+import { AlertTriangle, ChevronUp, ChevronDown } from 'lucide-react';
 import { Handle, NodeProps, Position, Node } from '@xyflow/react';
 import { cn } from 'src/app/lib/utils';
 import { Button } from 'src/app/ui/button';
@@ -18,6 +11,7 @@ import {
 import { SourceIcon } from '../components/source-icon';
 import { StatusIcon } from '../components/status-icon';
 import { useShallow } from 'zustand/react/shallow';
+import { ColumnItem } from '../components/column-item';
 
 export type DataSourceNodeType = Node<DataNodeData, 'dataSource'>;
 
@@ -25,27 +19,37 @@ const selector = (state: FlowState) => ({
   expandedNodes: state.expandedNodes,
   toggleNodeExpansion: state.toggleNodeExpansion,
   selectedColumns: state.selectedColumns,
+  toggleColumnSelection: state.toggleColumnSelection,
 });
 
 export function DataSourceNode({
   data: { label, source, status, columns, alert },
   id,
+  selected,
 }: NodeProps<DataSourceNodeType>) {
-  const { toggleNodeExpansion, expandedNodes, selectedColumns } = useFlowStore(
-    useShallow(selector)
-  );
+  const {
+    toggleNodeExpansion,
+    expandedNodes,
+    selectedColumns,
+    toggleColumnSelection,
+  } = useFlowStore(useShallow(selector));
   const isExpanded = expandedNodes.has(id);
-  const columnsToDisplay = selectedColumns.get(id) || [];
+  const selectedColumnsToDisplay = selectedColumns.get(id) || [];
 
   const displayColumns = columns.filter((col: DataColumn) =>
-    columnsToDisplay.includes(col.name)
+    selectedColumnsToDisplay.includes(col.name)
+  );
+
+  const nonSelectedColumns = columns.filter(
+    (col: DataColumn) => !selectedColumnsToDisplay.includes(col.name)
   );
 
   return (
     <div
       className={cn(
         'bg-white rounded-lg border shadow-sm w-64',
-        isExpanded ? 'min-h-[200px]' : ''
+        isExpanded ? 'min-h-[200px]' : '',
+        selected ? 'border-blue-500 border-2' : ''
       )}
     >
       <Handle
@@ -101,27 +105,34 @@ export function DataSourceNode({
         {isExpanded && displayColumns && displayColumns.length > 0 && (
           <div className="mt-3 space-y-2">
             {displayColumns.map((column: DataColumn, index: number) => (
-              <div
+              <ColumnItem
                 key={index}
-                className="flex items-center gap-2 p-2 border rounded text-sm"
-              >
-                {column.type === 'string' && (
-                  <Type className="w-4 h-4 text-gray-500 min-w-4" />
-                )}
-                {column.type === 'date' && (
-                  <Calendar className="w-4 h-4 text-gray-500 min-w-4" />
-                )}
-                {column.type === 'number' && (
-                  <Hash className="w-4 h-4 text-gray-500" />
-                )}
-                <span className="text-gray-700">{column.name}</span>
-              </div>
+                column={column}
+                isSelected
+                onClick={() => toggleColumnSelection(id, column.name)}
+              />
             ))}
           </div>
         )}
 
         {isExpanded && displayColumns && displayColumns.length === 0 && (
           <div className="mt-3 text-gray-500 text-sm">No columns selected</div>
+        )}
+
+        {isExpanded && nonSelectedColumns && nonSelectedColumns.length > 0 && (
+          <div className="mt-6 text-gray-500 text-sm">
+            <span className="font-medium">Available columns</span>
+            <div className="mt-2 space-y-2">
+              {nonSelectedColumns.map((column: DataColumn, index: number) => (
+                <ColumnItem
+                  key={index}
+                  column={column}
+                  isSelected={false}
+                  onClick={() => toggleColumnSelection(id, column.name)}
+                />
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

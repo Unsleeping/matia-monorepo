@@ -12,7 +12,6 @@ import { Link } from '@tanstack/react-router';
 export function OverviewConfig() {
   const queryClient = useQueryClient();
   const { resetToDefault } = useFlowStore();
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   const handleReset = () => {
     resetToDefault();
@@ -32,10 +31,7 @@ export function OverviewConfig() {
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <DataSourcesPanel
-          selectedNodeId={selectedNodeId}
-          setSelectedNodeId={setSelectedNodeId}
-        />
+        <DataSourcesPanel />
 
         <div className="flex justify-center items-center flex-col">
           <img src="/matia-logo.svg" alt="matia-logo" className="w-1/2" />
@@ -44,7 +40,7 @@ export function OverviewConfig() {
           </Link>
         </div>
 
-        <NodeConfigurationPanel selectedNodeId={selectedNodeId} />
+        <NodeConfigurationPanel />
       </div>
 
       <div className="grid grid-cols-3 gap-4">

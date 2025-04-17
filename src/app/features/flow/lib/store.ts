@@ -38,6 +38,7 @@ export type DataEdge = Edge;
 export type FlowState = {
   // custom state to control UI inside custom flow nodes
   expandedNodes: Set<string>;
+  selectedNodeId: string | null;
   selectedColumns: Map<string, string[]>;
   isLoading: boolean;
 
@@ -50,6 +51,7 @@ export type FlowState = {
   updateNodeColumns: (nodeId: string, columns: DataColumn[]) => void;
   toggleColumnSelection: (nodeId: string, columnName: string) => void;
   resetToDefault: () => void;
+  setSelectedNodeId: (nodeId: string | null) => void;
 
   // custom actions to update flow state outside of react-flow
   removeEdge: (edgeId: string) => void;
@@ -74,6 +76,7 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
   expandedNodes: new Set<string>(),
   selectedColumns: new Map<string, string[]>(),
   isLoading: false,
+  selectedNodeId: null,
 
   // custom actions to control UI inside custom flow nodes
   toggleNodeExpansion: (nodeId) => {
@@ -126,6 +129,8 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
       selectedColumns: new Map<string, string[]>(),
     }),
 
+  setSelectedNodeId: (nodeId) => set({ selectedNodeId: nodeId }),
+
   // load flow data from external source
   fetchFlowData: async () => {
     try {
@@ -141,19 +146,16 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
 
   // react flow controlled actions
   onNodesChange: (changes: NodeChange<DataNode>[]) => {
-    console.log('onNodesChange', changes);
     set({
       nodes: applyNodeChanges<DataNode>(changes, get().nodes),
     });
   },
   onEdgesChange: (changes: EdgeChange[]) => {
-    console.log('onEdgesChange', changes);
     set({
       edges: applyEdgeChanges(changes, get().edges),
     });
   },
   onConnect: (connection: Connection) => {
-    console.log('onConnect', connection);
     set({
       edges: addEdge(connection, get().edges),
     });

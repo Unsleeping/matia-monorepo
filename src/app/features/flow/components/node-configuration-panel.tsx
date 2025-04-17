@@ -20,25 +20,21 @@ import { NodeStatus } from './node-status';
 import { NodeIcon } from './node-icon';
 import { useShallow } from 'zustand/react/shallow';
 
-interface NodeConfigurationPanelProps {
-  selectedNodeId: string | null;
-}
-
 const selector = (state: FlowState) => ({
   nodes: state.nodes,
   selectedColumns: state.selectedColumns,
   toggleColumnSelection: state.toggleColumnSelection,
   updateNodeStatus: state.updateNodeStatus,
+  selectedNodeId: state.selectedNodeId,
 });
 
-export function NodeConfigurationPanel({
-  selectedNodeId,
-}: NodeConfigurationPanelProps) {
+export function NodeConfigurationPanel() {
   const {
     nodes,
     selectedColumns: allSelectedColumns,
     toggleColumnSelection,
     updateNodeStatus,
+    selectedNodeId,
   } = useFlowStore(useShallow(selector));
 
   const selectedNode =

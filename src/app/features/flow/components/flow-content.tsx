@@ -10,6 +10,7 @@ import {
 import { DataSourceNode } from '../nodes/data-source-node';
 import { FlowState, useFlowStore } from '../lib/store';
 import { useShallow } from 'zustand/react/shallow';
+import { SelectionTracker } from './selection-tracker';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
@@ -44,6 +45,7 @@ export function FlowContent() {
       nodeTypes={nodeTypes}
       fitView
     >
+      <SelectionTracker />
       <Background variant={BackgroundVariant.Dots} />
       <Controls />
       <MiniMap />

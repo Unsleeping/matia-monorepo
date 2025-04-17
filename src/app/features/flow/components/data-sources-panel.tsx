@@ -11,21 +11,18 @@ import { ScrollArea } from 'src/app/ui/scroll-area';
 import { Skeleton } from 'src/app/ui/skeleton';
 import { NodeConfigItem } from './node-config-item';
 import { useShallow } from 'zustand/react/shallow';
-interface DataSourcesPanelProps {
-  selectedNodeId: string | null;
-  setSelectedNodeId: (nodeId: string | null) => void;
-}
 
 const selector = (state: FlowState) => ({
   nodes: state.nodes,
   isLoading: state.isLoading,
+  selectedNodeId: state.selectedNodeId,
+  setSelectedNodeId: state.setSelectedNodeId,
 });
 
-export function DataSourcesPanel({
-  selectedNodeId,
-  setSelectedNodeId,
-}: DataSourcesPanelProps) {
-  const { nodes, isLoading } = useFlowStore(useShallow(selector));
+export function DataSourcesPanel() {
+  const { nodes, isLoading, selectedNodeId, setSelectedNodeId } = useFlowStore(
+    useShallow(selector)
+  );
 
   const { selectedColumns, removeNode } = useFlowStore();
 
