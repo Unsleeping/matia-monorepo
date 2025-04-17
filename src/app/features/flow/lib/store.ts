@@ -36,13 +36,10 @@ export type DataNode = Node<DataNodeData, 'dataSource'>;
 export type DataEdge = Edge;
 
 export type FlowState = {
-  nodes: DataNode[];
-  edges: DataEdge[];
   expandedNodes: Set<string>;
   selectedColumns: Map<string, string[]>;
   isLoading: boolean;
 
-  // Actions
   toggleNodeExpansion: (nodeId: string) => void;
   updateNodeStatus: (
     nodeId: string,
@@ -52,12 +49,15 @@ export type FlowState = {
   toggleColumnSelection: (nodeId: string, columnName: string) => void;
   resetToDefault: () => void;
 
+  fetchFlowData: () => Promise<void>;
+
   // TODO: refactor to divide from react-flow and custom actions
+  nodes: DataNode[];
+  edges: DataEdge[];
+
   onNodesChange: (changes: NodeChange<DataNode>[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;
   onConnect: (connection: Connection) => void;
-
-  fetchFlowData: () => Promise<void>;
 };
 
 export const useFlowStore = create<FlowState>()((set, get) => ({
