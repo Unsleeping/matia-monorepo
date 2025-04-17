@@ -1,5 +1,6 @@
 import { OverviewConfig } from '../features/flow/components/overview-config';
 import { useAuth, useLoginWithRedirect } from '@frontegg/react';
+import { ReactFlowProvider } from '@xyflow/react';
 
 export function RootPage() {
   // useAuth hook to check if the current user is signed in, returning the user object if so
@@ -17,7 +18,9 @@ export function RootPage() {
   return (
     <main className="flex min-h-screen flex-col">
       <div className="flex-1 bg-gray-50">
-        <OverviewConfig />
+        <ReactFlowProvider>
+          <OverviewConfig />
+        </ReactFlowProvider>
       </div>
 
       {/**

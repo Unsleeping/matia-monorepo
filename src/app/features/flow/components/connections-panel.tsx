@@ -13,7 +13,9 @@ import { Button } from 'src/app/ui/button';
 import { ScrollArea } from 'src/app/ui/scroll-area';
 import { Skeleton } from 'src/app/ui/skeleton';
 import { useShallow } from 'zustand/react/shallow';
-
+import { useStoreApi } from '@xyflow/react';
+import { useState } from 'react';
+import { cn } from 'src/app/lib/utils';
 const selector = (state: FlowState) => ({
   nodes: state.nodes,
   edges: state.edges,
@@ -25,9 +27,17 @@ export function ConnectionsPanel() {
   const { nodes, edges, isLoading, removeEdge } = useFlowStore(
     useShallow(selector)
   );
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+  const reactFlowStore = useStoreApi();
 
   const handleDeleteEdge = (edgeId: string) => {
     removeEdge(edgeId);
+  };
+
+  const handleSelectEdge = (edgeId: string) => {
+    setSelectedEdgeId(edgeId);
+    const reactFlowState = reactFlowStore.getState();
+    reactFlowState.addSelectedEdges([edgeId]);
   };
 
   return (
@@ -53,7 +63,15 @@ export function ConnectionsPanel() {
                 const targetNode = nodes?.find((n) => n.id === edge.target);
 
                 return (
-                  <div key={edge.id} className="p-3 border rounded-md">
+                  <div
+                    key={edge.id}
+                    className={cn(
+                      'p-3 border rounded-md cursor-pointer',
+                      selectedEdgeId === edge.id &&
+                        'bg-blue-50 border border-blue-500'
+                    )}
+                    onClick={() => handleSelectEdge(edge.id)}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="max-w-[250px]">
                         <div className="flex items-center gap-2">

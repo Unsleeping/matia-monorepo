@@ -11,6 +11,7 @@ import { ScrollArea } from 'src/app/ui/scroll-area';
 import { Skeleton } from 'src/app/ui/skeleton';
 import { NodeConfigItem } from './node-config-item';
 import { useShallow } from 'zustand/react/shallow';
+import { useStoreApi } from '@xyflow/react';
 
 const selector = (state: FlowState) => ({
   nodes: state.nodes,
@@ -23,6 +24,7 @@ export function DataSourcesPanel() {
   const { nodes, isLoading, selectedNodeId, setSelectedNodeId } = useFlowStore(
     useShallow(selector)
   );
+  const reactFlowStore = useStoreApi();
 
   const { selectedColumns, removeNode } = useFlowStore();
 
@@ -32,6 +34,14 @@ export function DataSourcesPanel() {
     if (selectedNodeId === nodeId) {
       setSelectedNodeId(null);
     }
+  };
+
+  const handleSelectNode = (nodeId: string) => {
+    setSelectedNodeId(nodeId);
+
+    const reactFlowState = reactFlowStore.getState();
+
+    reactFlowState.addSelectedNodes([nodeId]);
   };
 
   return (
@@ -58,7 +68,7 @@ export function DataSourcesPanel() {
                   node={node}
                   selectedNodeId={selectedNodeId}
                   selectedColumns={selectedColumns}
-                  onSelect={setSelectedNodeId}
+                  onSelect={handleSelectNode}
                   onDelete={handleDeleteNode}
                 />
               ))}
