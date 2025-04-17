@@ -28,27 +28,21 @@ export type DataNodeData = {
     title: string;
     message: string;
   };
-  isExpanded?: boolean;
-  onToggleExpand?: (id: string) => void;
   selectedColumns?: string[];
 };
 
 export type DataNode = Node<DataNodeData, 'dataSource'>;
 
-export type DataEdge = Edge & {
-  // Add any custom edge properties here
-};
+export type DataEdge = Edge;
 
 export type FlowState = {
   nodes: DataNode[];
   edges: DataEdge[];
-  expandedNodes: Record<string, boolean>;
-  selectedColumns: Record<string, string[]>;
+  expandedNodes: Set<string>;
+  selectedColumns: Map<string, string[]>;
   isLoading: boolean;
 
   // Actions
-  setNodes: (nodes: DataNode[]) => void;
-  setEdges: (edges: DataEdge[]) => void;
   toggleNodeExpansion: (nodeId: string) => void;
   updateNodeStatus: (
     nodeId: string,
@@ -56,10 +50,6 @@ export type FlowState = {
   ) => void;
   updateNodeColumns: (nodeId: string, columns: DataColumn[]) => void;
   toggleColumnSelection: (nodeId: string, columnName: string) => void;
-  addNode: (node: DataNode) => void;
-  removeNode: (nodeId: string) => void;
-  addEdge: (edge: DataEdge) => void;
-  removeEdge: (edgeId: string) => void;
   resetToDefault: () => void;
 
   // TODO: refactor to divide from react-flow and custom actions
@@ -73,38 +63,24 @@ export type FlowState = {
 export const useFlowStore = create<FlowState>()((set, get) => ({
   nodes: [] as DataNode[],
   edges: [] as DataEdge[],
-  expandedNodes: {},
-  selectedColumns: {},
+  expandedNodes: new Set<string>(),
+  selectedColumns: new Map<string, string[]>(),
   isLoading: false,
 
-  setNodes: (nodes) => {
-    // Preserve positions from existing nodes
-    const currentNodes = get().nodes;
+  toggleNodeExpansion: (nodeId) => {
+    const expandedNodes = new Set(get().expandedNodes);
+    const currentExpanded = expandedNodes.has(nodeId);
 
-    const updatedNodes = nodes.map((node) => {
-      const existingNode = currentNodes.find((n) => n.id === node.id);
-      if (existingNode) {
-        // Keep the existing position if it exists
-        return {
-          ...node,
-          position: node.position || existingNode.position,
-        };
-      }
-      return node;
-    });
+    if (currentExpanded) {
+      expandedNodes.delete(nodeId);
+    } else {
+      expandedNodes.add(nodeId);
+    }
 
-    set({ nodes: updatedNodes });
-  },
-
-  setEdges: (edges) => set({ edges }),
-
-  toggleNodeExpansion: (nodeId) =>
     set((state) => ({
-      expandedNodes: {
-        ...state.expandedNodes,
-        [nodeId]: !state.expandedNodes[nodeId],
-      },
-    })),
+      expandedNodes: expandedNodes,
+    }));
+  },
 
   updateNodeStatus: (nodeId, status) =>
     set((state) => ({
@@ -122,48 +98,22 @@ export const useFlowStore = create<FlowState>()((set, get) => ({
 
   toggleColumnSelection: (nodeId, columnName) =>
     set((state) => {
-      const currentSelected = state.selectedColumns[nodeId] || [];
+      const currentSelected = state.selectedColumns.get(nodeId) || [];
       const newSelected = currentSelected.includes(columnName)
         ? currentSelected.filter((name) => name !== columnName)
         : [...currentSelected, columnName];
 
       return {
-        selectedColumns: {
-          ...state.selectedColumns,
-          [nodeId]: newSelected,
-        },
+        selectedColumns: state.selectedColumns.set(nodeId, newSelected),
       };
     }),
-
-  addNode: (node) =>
-    set((state) => ({
-      nodes: [...state.nodes, node],
-    })),
-
-  removeNode: (nodeId) =>
-    set((state) => ({
-      nodes: state.nodes.filter((node) => node.id !== nodeId),
-      edges: state.edges.filter(
-        (edge) => edge.source !== nodeId && edge.target !== nodeId
-      ),
-    })),
-
-  addEdge: (edge) =>
-    set((state) => ({
-      edges: [...state.edges, edge],
-    })),
-
-  removeEdge: (edgeId) =>
-    set((state) => ({
-      edges: state.edges.filter((edge) => edge.id !== edgeId),
-    })),
 
   resetToDefault: () =>
     set({
       nodes: mockConfig.nodes,
       edges: mockConfig.edges,
-      expandedNodes: {},
-      selectedColumns: {},
+      expandedNodes: new Set<string>(),
+      selectedColumns: new Map<string, string[]>(),
     }),
 
   fetchFlowData: async () => {

@@ -9,29 +9,37 @@ import {
 import { Handle, NodeProps, Position, Node } from '@xyflow/react';
 import { cn } from 'src/app/lib/utils';
 import { Button } from 'src/app/ui/button';
-import { DataColumn, DataNodeData } from '../lib/store';
+import {
+  DataColumn,
+  DataNodeData,
+  useFlowStore,
+  FlowState,
+} from '../lib/store';
 import { SourceIcon } from '../components/source-icon';
 import { StatusIcon } from '../components/status-icon';
+import { useShallow } from 'zustand/react/shallow';
 
 export type DataSourceNodeType = Node<DataNodeData, 'dataSource'>;
 
+const selector = (state: FlowState) => ({
+  expandedNodes: state.expandedNodes,
+  toggleNodeExpansion: state.toggleNodeExpansion,
+});
+
 export function DataSourceNode({
-  data: {
-    label,
-    source,
-    status,
-    columns,
-    isExpanded,
-    onToggleExpand,
-    alert,
-    selectedColumns = [],
-  },
+  data: { label, source, status, columns, alert },
   id,
 }: NodeProps<DataSourceNodeType>) {
-  const displayColumns = columns.filter(
-    (col: DataColumn) =>
-      selectedColumns.length === 0 || selectedColumns.includes(col.name)
+  const { toggleNodeExpansion, expandedNodes } = useFlowStore(
+    useShallow(selector)
   );
+  const isExpanded = expandedNodes.has(id);
+
+  const displayColumns = columns;
+  // .filter(
+  //   (col: DataColumn) =>
+  //     selectedColumns.length === 0 || selectedColumns.includes(col.name)
+  // );
 
   return (
     <div
@@ -74,8 +82,8 @@ export function DataSourceNode({
       <div className="p-3">
         <Button
           variant="ghost"
-          className="flex items-center text-sm text-blue-600 hover:text-blue-800"
-          onClick={() => onToggleExpand?.(id)}
+          className="flex items-center text-sm text-blue-600 hover:text-blue-800 nopan nodrag"
+          onClick={() => toggleNodeExpansion(id)}
         >
           {isExpanded ? (
             <>
@@ -116,11 +124,11 @@ export function DataSourceNode({
               </button>
             )}
 
-            {selectedColumns.length > 0 && (
+            {/* {selectedColumns.length > 0 && (
               <div className="text-xs text-gray-500 mt-2">
                 Showing {selectedColumns.length} selected columns
               </div>
-            )}
+            )} */}
           </div>
         )}
       </div>
